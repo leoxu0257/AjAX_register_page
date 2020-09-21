@@ -10,8 +10,8 @@
 <body>
     <div class="register">
         <p class="title"  id="title">
-            <span>登 录</span>
-            <span class="current">注 册</span>
+            <span>LOG IN</span>
+            <span class="current">New User</span>
         </p>
         <div class="form">
             <div>
@@ -30,11 +30,9 @@
                 <p class="info" id="pwd_info"></p>
             </div>
             <p class="button">
-                <a href="javascript:void(0)" id="login-btn" class="btn">登 录</a>
-                <a href="javascript:void(0)" id="signup-btn" class="btn show">注 册</a>
-                
-                <!-- <button id="login-btn" class="btn gone">登 录</button>
-                <button id="signup-btn" class="btn show">注 册</button> -->
+                <a href="javascript:void(0)" id="login-btn" class="btn">LOG IN</a>
+                <a href="javascript:void(0)" id="signup-btn" class="btn show">New User</a>
+           
                 
             </p>
         </div>
@@ -80,7 +78,7 @@
                                     isRepeat=true;
                                     userInfo.innerHTML= data.msg;
                                 }else{
-                                    userInfo.innerHTML='检测失败，请重试';
+                                    userInfo.innerHTML='Fail,please try again';
                                 }
                             }
                         })    
@@ -94,7 +92,7 @@
             var pwdVal=pwd.value;
             
             if (!pwdReg.test(pwdVal)){
-                pwdInfo.innerHTML='请输入5到12位字母，数字及下划线';
+                pwdInfo.innerHTML='Please enter 5 to 12 letters, numbers Or _';
                 pwdIcon.className='no';
             }else{
                 pwdInfo.innerHTML='';
@@ -125,7 +123,7 @@
                         console.log(data);
                     },
                     error:function(){
-                        pwdInfo.innerHTML='注册失败，请重试';
+                        pwdInfo.innerHTML='Fail,please try again';
                     }
                 })
             }
