@@ -35,10 +35,10 @@ foreach($fileContent_array as $key=>$val){
 }
 
 if($isrepeat){
-    $msg = printMsg('用户名重复',0);
+    $msg = printMsg('This name is token,0);
     echo json_encode($msg);
     exit();
 }
-$msg = printMsg('用户名可用',1);
+$msg = printMsg('Avaliable',1);
 echo json_encode($msg);
 ?>
