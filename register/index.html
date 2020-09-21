@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <meta charset="utf-8"> 
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="register">
+        <p class="title"  id="title">
+            <span>登 录</span>
+            <span class="current">注 册</span>
+        </p>
+        <div class="form">
+            <div>
+                <span>+64</span>
+                <input type="text" name="user" id="user"
+                placeholder="Please enter Phone number" autocomplete="off" dataCheck="signup"/>
+                <!-- <i class="ok"></i> -->
+                <i id="user_icon"></i>
+                <p class="info" id="user_info"></p>
+            </div>
+            <div>
+                <input type="password" name="pwd" id="pwd" 
+                placeholder="Please enter password">
+                <!-- <i class="no"></i> -->
+                <i id="pwd_icon"></i>
+                <p class="info" id="pwd_info"></p>
+            </div>
+            <p class="button">
+                <a href="javascript:void(0)" id="login-btn" class="btn">登 录</a>
+                <a href="javascript:void(0)" id="signup-btn" class="btn show">注 册</a>
+                
+                <!-- <button id="login-btn" class="btn gone">登 录</button>
+                <button id="signup-btn" class="btn show">注 册</button> -->
+                
+            </p>
+        </div>
+    </div>
+    <script src="./js/ajax.js"></script>
+    <script>
+        var username= document.getElementById('user'),
+            pwd=document.getElementById('pwd'),
+            signup=document.getElementById('signup-btn'), 
+            login=document.getElementById('login-btn'),
+            titles=document.getElementById('title').getElementsByTagName('span'),
+            userInfo= document.getElementById('user_info'),
+            userIcon= document.getElementById("user_icon"),
+            pwdInfo= document.getElementById('pwd_info'),
+            pwdIcon= document.getElementById('pwd_icon'),
+            userReg=/^1[3578]\d{9}$/,
+            pwdReg = /^\w{5,12}$/,
+            isRepeat=false;//记录用户名是否被占用
+        //检测用户名
+            function checkUser() {
+                var userVal=user.value,
+                    checkU=user.getAttribute('dataCheck');
+                if (checkU==='logIn') {
+                    return;
+                }//验证手机号是否有效
+                    if(!userReg.test(userVal)){
+                    userInfo.innerHTML="Invalid Phone number";
+                    userIcon.className='no';
+                    }else{
+                        userInfo.innerHTML='';
+                        userIcon.className='';
+                        //发起请求
+                        $.ajax({
+                            url:'http://localhost:81/server/isUserRepeat.php',
+                            data:{username:userVal},
+                            success:function(data){           
+                                console.log(data);
+                                if (data.code==1) {
+                                    userIcon.className='ok';
+                                    isRepeat=false;
+                                }else if(data.code == 0){
+                                    userIcon.className='no';
+                                    isRepeat=true;
+                                    userInfo.innerHTML= data.msg;
+                                }else{
+                                    userInfo.innerHTML='检测失败，请重试';
+                                }
+                            }
+                        })    
+                    }
+                
+                
+            }
+
+        //检测密码
+        function checkPwd() {
+            var pwdVal=pwd.value;
+            
+            if (!pwdReg.test(pwdVal)){
+                pwdInfo.innerHTML='请输入5到12位字母，数字及下划线';
+                pwdIcon.className='no';
+            }else{
+                pwdInfo.innerHTML='';
+                pwdIcon.className='ok';
+            }
+        }
+        
+        //注册函数
+        function register() {
+            var user_val=user.value,
+                pwd_val=pwd.value;
+            //如果手机号有效&&没有被占用&&密码合法==注册
+            if (userReg.test(user_val) && pwdReg.test(pwd_val) && !isRepeat) {
+                //发起请求---实现注册
+                $.ajax({
+                    url:"http://localhost:81/server/._register.php",
+                    method:"post",
+                    data:{username:user_val,userpwd:pwd_val},
+                    success:function(data){
+                        alert("注册成功，请登录");
+                        changeModeLogIn()
+                        //调用显示登陆界面
+                        showLogin();
+                        //清空文本框
+                        user.value="";
+                        pwd.value="";
+                        user.setAttribute("dataCheck","logIn");
+                        console.log(data);
+                    },
+                    error:function(){
+                        pwdInfo.innerHTML='注册失败，请重试';
+                    }
+                })
+            }
+        }
+        //显示登陆
+        function showLogin() {
+            //载入登陆界面
+            titles[0].className="current";
+            titles[1].className="";
+            login.className="show";
+            signup.className="";
+        }
+        function showSignup() {
+            //载入注册界面，注册高亮显示
+            titles[1].className="current";
+            titles[0].className="";
+            login.className="";
+            signup.className="show";
+        }
+        function changeModeLogIn() {
+            user.setAttribute("dataCheck","logIn");
+            userIcon.className='';
+            pwdInfo.className='';
+        }
+        function changeModeSignUp() {
+            user.setAttribute("dataCheck","signup");
+        }
+
+        //绑定事件---检测用户是否注册过
+            user.addEventListener('blur',checkUser,false);
+        //绑定事件---检测密码的有效性
+            pwd.addEventListener('blur',checkPwd,false);
+        //注册
+            signup.addEventListener("click",register,false);
+            // login.addEventListener("click",logIn,false);
+        //登陆高亮
+            titles[0].addEventListener("click",showLogin,false);
+            titles[0].addEventListener("click",changeModeLogIn,false);
+        //注册高亮
+            titles[1].addEventListener("click",showSignup,false);
+            titles[1].addEventListener("click",changeModeSignUp,false);
+    </script>
+</body>
+</html>
