@@ -8,7 +8,7 @@ var $={
             params='',                              //data参数
             callback=options.success,               //AJAX请求成功的回调函数   
             error=options.error;                          
-            //将data的对象字面量形式转换为string形式
+            //将data的对象字面量形式转换为string形式 
             if(data){
                 for (var i in data) {
                     params+=i+'='+data[i]+'&';
