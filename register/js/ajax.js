@@ -15,7 +15,7 @@ var $={
                     
                 }
                 params=params.replace(/&$/,"");
-                console.log(params);
+                console.log(params);//输出params
             }
 
             //根据method的值改变url
